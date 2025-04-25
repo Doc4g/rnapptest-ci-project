@@ -1,0 +1,44 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - master
+
+pool:
+  name: Default
+  demands:
+    - Agent.Name -equals your-agent-name
+
+variables:
+  NODE_VERSION: '18.x'
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '$(NODE_VERSION)'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install -g expo-cli
+    displayName: 'Install Expo CLI globally'
+
+  - script: |
+      npm ci
+    displayName: 'Install project dependencies'
+
+  - script: |
+      npx expo install
+    displayName: 'Ensure all Expo dependencies are installed'
+
+  - script: |
+      npx expo export --dev --output-dir dist
+    displayName: 'Export static bundle (Expo export)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'dist'
+      ArtifactName: 'expo-app-dist'
+      publishLocation: 'Container'
+    displayName: 'Publish exported app as artifact'
