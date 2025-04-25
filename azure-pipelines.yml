@@ -8,8 +8,8 @@ trigger:
 
 pool:
   name: Default
-  ##demands:
-    ##- Agent.Name -equals your-agent-name
+  demands:
+    - Agent.Name -equals SelfHostedAgent
 
 variables:
   NODE_VERSION: '18.x'
